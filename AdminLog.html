@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Login</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('logo.png') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .login-container {
+      background: rgba(40, 40, 40, 0.95);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+      width: 320px;
+      text-align: center;
+      animation: float 3s ease-in-out infinite;
+      border: 2px solid #888;
+      color: white;
+      margin-left: 810px;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    .login-container h2 {
+      margin-bottom: 20px;
+      color: #ccc;
+      font-size: 28px;
+      letter-spacing: 1px;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    }
+
+    .login-container input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #555;
+      border-radius: 8px;
+      font-size: 16px;
+      background-color: #333;
+      color: white;
+    }
+
+    .login-container input::placeholder {
+      color: #aaa;
+    }
+
+    .login-container button {
+      width: 100%;
+      padding: 12px;
+      background-color: #222;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .login-container button:hover {
+      background-color: #444;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <h2>Admin Login</h2>
+    <input type="text" id="username" placeholder="Username" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button onclick="login()">Login</button>
+    <button onclick="goToUserLogin()">Go to User Login</button>
+  </div>
+
+  <script>
+    function login() {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+
+      const fixedUsername = "admin";
+      const fixedPassword = "admin123";
+
+      if (username === fixedUsername && password === fixedPassword) {
+        alert("Login successful!");
+        window.location.href = "index.php";
+      } else {
+        alert("Invalid username or password.");
+      }
+    }
+
+    function goToUserLogin() {
+      window.location.href = "user-login.html";
+    }
+  </script>
+
+</body>
+</html>

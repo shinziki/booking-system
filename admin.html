@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .topbar {
+      background-color: #f48fb1;
+      padding: 10px 20px;
+      text-align: center;
+      color: white;
+      font-size: 24px;
+    }
+
+    .container {
+      display: flex;
+      height: calc(100vh - 50px);
+    }
+
+    .sidebar {
+      width: 220px;
+      background-color: #f8bbd0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .nav-btn, .logout-btn {
+      background-color: #f48fb1;
+      border: none;
+      padding: 10px;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 8px;
+      transition: background-color 0.3s;
+    }
+
+    .nav-btn:hover, .logout-btn:hover {
+      background-color: #f06292;
+    }
+
+    .main {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    h2 {
+      color: #ad1457;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      border: 1px solid #f48fb1;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #fce4ec;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .refresh-btn {
+      margin-bottom: 10px;
+      background-color: #f06292;
+      border: none;
+      padding: 8px 12px;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      float: right;
+    }
+
+    .refresh-btn:hover {
+      background-color: #ec407a;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <h1>Admin Dashboard</h1>
+  </div>
+
+  <div class="container">
+    <div class="sidebar">
+      <button class="nav-btn" onclick="showSection('transaction')">🧾 Transaction</button>
+      <button class="nav-btn" onclick="showSection('customer')">👤 Customer</button>
+      <button class="nav-btn" onclick="showSection('riders')">🏍️ Riders</button>
+      <button class="nav-btn" onclick="showSection('fare')">💰 Fare</button>
+      <button class="nav-btn" onclick="showSection('feedback')">📦 Feedback</button>
+      <button class="logout-btn">➡️ Log Out</button>
+    </div>
+
+    <div class="main">
+      <div id="transaction" class="transaction-table-container hidden">
+        <h2>Transactions</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Booking ID</th>
+              <th>User ID</th>
+              <th>Rider ID</th>
+              <th>From</th>
+              <th>To</th>
+              <th>Fare (₱)</th>
+              <th>Confirmed At</th>
+              <th>Arrived</th>
+              <th>Reached</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>BK123</td>
+              <td>U001</td>
+              <td>R002</td>
+              <td>SM City</td>
+              <td>Ayala Center</td>
+              <td>120</td>
+              <td>2025-04-12 08:35</td>
+              <td>2025-04-12 08:55</td>
+              <td>2025-04-12 09:00</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="customer" class="table-container">
+        <h2>Customer</h2>
+        <button class="refresh-btn" onclick="loadCustomers()">REFRESH</button>
+        <table>
+          <thead>
+            <tr>
+              <th>NAME</th>
+              <th>NUMBER</th>
+              <th>EMAIL</th>
+              <th>PASSWORD</th>
+            </tr>
+          </thead>
+          <tbody id="customerBody"></tbody>
+        </table>
+      </div>
+
+      <div id="riders" class="table-container hidden">
+        <h2>Riders</h2>
+        <button class="refresh-btn" onclick="loadRiders()">REFRESH</button>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Number</th>
+              <th>Vehicle</th>
+              <th>License</th>
+            </tr>
+          </thead>
+          <tbody id="riderBody"></tbody>
+        </table>
+      </div>
+
+      <div id="fare" class="table-container hidden">
+        <h2>Fare</h2>
+        <button class="refresh-btn" onclick="loadFares()">REFRESH</button>
+        <table>
+          <thead>
+            <tr>
+              <th>From</th>
+              <th>Destination</th>
+              <th>Fare</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="fareBody"></tbody>
+        </table>
+      </div>
+
+      <div id="feedback" class="table-container hidden">
+        <h2>Feedback</h2>
+        <button class="refresh-btn" onclick="loadFeedback()">REFRESH</button>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>User ID</th>
+              <th>Feedback</th>
+              <th>Rating</th>
+            </tr>
+          </thead>
+          <tbody id="feedbackBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showSection(id) {
+      document.querySelectorAll('.main > div').forEach(div => div.classList.add('hidden'));
+      document.getElementById(id).classList.remove('hidden');
+    }
+
+    showSection('customer');
+
+    function loadCustomers() {
+      fetch('get_customers.php')
+        .then(res => res.json())
+        .then(data => {
+          const tbody = document.getElementById('customerBody');
+          tbody.innerHTML = '';
+          data.forEach(c => {
+            tbody.innerHTML += `
+              <tr>
+                <td>${c.name}</td>
+                <td>${c.number}</td>
+                <td>${c.email}</td>
+                <td>********</td>
+              </tr>`;
+          });
+        });
+    }
+
+    function loadRiders() {
+      fetch('get_riders.php')
+        .then(res => res.json())
+        .then(data => {
+          const tbody = document.getElementById('riderBody');
+          tbody.innerHTML = '';
+          data.forEach(r => {
+            tbody.innerHTML += `
+              <tr>
+                <td>${r.name}</td>
+                <td>${r.number}</td>
+                <td>${r.vehicle}</td>
+                <td>${r.license}</td>
+              </tr>`;
+          });
+        });
+    }
+
+    function loadFares() {
+      fetch('get_fares.php')
+        .then(res => res.json())
+        .then(data => {
+          const tbody = document.getElementById('fareBody');
+          tbody.innerHTML = '';
+          data.forEach(f => {
+            tbody.innerHTML += `
+              <tr>
+                <td>${f.start}</td>
+                <td>${f.destination}</td>
+                <td>${f.price}</td>
+                <td>${f.date}</td>
+              </tr>`;
+          });
+        });
+    }
+
+    function loadFeedback() {
+      fetch('get_feedback.php')
+        .then(res => res.json())
+        .then(data => {
+          const tbody = document.getElementById('feedbackBody');
+          tbody.innerHTML = '';
+          data.forEach(f => {
+            tbody.innerHTML += `
+              <tr>
+                <td>${f.id}</td>
+                <td>${f.user_id}</td>
+                <td>${f.message}</td>
+                <td>${f.rating}</td>
+              </tr>`;
+          });
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadCustomers();
+    });
+  </script>
+</body>
+</html>
