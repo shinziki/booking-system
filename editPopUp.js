@@ -1,5 +1,5 @@
 function editFare(id, from, destination, fare, date) {
-    console.log("Edit Fare called with ID:", id);  // Add this for debugging
+    // console.log("Edit Fare called with ID:", id);  // Add this for debugging
     document.getElementById('editId').value = id;
     document.getElementById('editFrom').value = from;
     document.getElementById('editDestination').value = destination;
@@ -10,5 +10,5 @@ function editFare(id, from, destination, fare, date) {
 }
 
 function closeEditPopup() {
-    document.getElementById('editPopUp').style.top = '-100%';
+    document.getElementById('editPopup').style.top = '-100%';
 }

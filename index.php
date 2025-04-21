@@ -161,7 +161,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <table id="fareTable">
           <thead>
             <tr>
-              <th>No.</th>
+              <th>No. ID</th>
               <th>From</th>
               <th>Destination</th>
               <th>Fare (₱)</th>
@@ -184,7 +184,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 echo "<td>" . htmlspecialchars($row['fare_date']) . "</td>";
                 echo "<td>
                   <button onclick=\"editFare('". $row['id'] . "', '" . addslashes($row['from_location']) . "', '". addslashes($row['destination']) . "', '" . $row['fare'] . "', '" . $row['fare_date'] . "')\">Edit</button> 
-                  <button onclick=\"deleteFare()\">Delete</button>
+                  <button onclick=\"deleteFare('".$row['id']."')\">Delete</button>
                   </td>";
                 echo "</tr>";
             }
@@ -277,8 +277,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     //   alert("Edit fare functionality");
     // }
 
-    function deleteFare() {
-      alert("Delete fare functionality");
+    function deleteFare(id) {
+      let result = confirm("Are you sure to delete this fare?");
+
+      if (result) {
+        window.location.href = "delete_fare.php?id=" + id;
+      }
     }
   </script>
   
