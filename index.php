@@ -57,6 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <div class="main">
       <!-- TRANSACTION -->
       <div id="transaction" class="transaction-table-container hidden">
+
         <h2>Transactions</h2>
         <table>
           <thead>
@@ -89,7 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       </div>
 
       <!-- CUSTOMER -->
-      <div id="customer" class="table-container">
+      <div id="customer" class="table-container ">
         <h2>Customer</h2>
         <button class="refresh-btn" onclick="refreshTable('customer')">REFRESH</button>
         <table>
@@ -122,12 +123,46 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </tbody>
         </table>
       </div>
+<!-- RIDERS -->
+<div id="riders" class="table-container hidden">
+  <h2>Riders</h2>
+  <button class="refresh-btn" onclick="refreshTable('riders')">REFRESH</button>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Plate Number</th>
+        <th>Contact</th>
+        <th>Address</th>
+        <th>License Number</th>
+        <th>Password</th>
+        <th>Registration Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php
+        $sql = "SELECT rider_name, plate_number, contact, address, license_number, password, registration_date FROM riders";
+        $result = $conn->query($sql);
 
-      <!-- RIDERS -->
-      <div id="riders" class="table-container hidden">
-        <h2>Riders</h2>
-        <p>Riders data will go here...</p>
-      </div>
+        if ($result->num_rows > 0) {
+          while ($row = $result->fetch_assoc()) {
+            echo "<tr>";
+            echo "<td>" . htmlspecialchars($row['rider_name']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['plate_number']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['contact']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['address']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['license_number']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['password']) . "</td>";
+            echo "<td>" . htmlspecialchars($row['registration_date']) . "</td>";
+            echo "</tr>";
+          }
+        } else {
+          echo "<tr><td colspan='7'>No riders found</td></tr>";
+        }
+      ?>
+    </tbody>
+  </table>
+</div>
 
       <!-- FARE -->
       <div id="fare" class="table-container hidden">
@@ -195,16 +230,42 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </tbody>
         </table>
       </div>
+<!-- FEEDBACK -->
+<div id="feedback" class="table-container hidden">
+  <h2>Feedback</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>User ID</th>
+        <th>Feedback</th>
+        <th>Rating</th>
+        <th>Submitted At</th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php
+        $mysqli = new mysqli("localhost", "root", "", "user_system");
+        if ($mysqli->connect_error) {
+            die("Connection failed: " . $mysqli->connect_error);
+        }
 
-      <!-- FEEDBACK -->
-      <div id="feedback" class="table-container hidden">
-        <h2>Feedback</h2>
-        <p>Feedback data will go here...</p>
-      </div>
+        $result = $mysqli->query("SELECT * FROM feedbacks ORDER BY submitted_at DESC");
+        while ($row = $result->fetch_assoc()) {
+            echo "<tr>
+              <td>{$row['id']}</td>
+              <td>{$row['user_id']}</td>
+              <td>{$row['feedback_text']}</td>
+              <td>{$row['rating']}</td>
+              <td>{$row['submitted_at']}</td>
+            </tr>";
+        }
+      ?>
+    </tbody>
+  </table>
+</div>
 
-    </div>
-
-    <div id="editPopup">
+<div id="editPopup">
       <div id="editPopupBox">
         <h2>Edit Fare</h2>
         <form id="editForm" method="post" action="update_fare.php">

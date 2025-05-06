@@ -57,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: url('logo.png') no-repeat center center fixed;
+      background: url('images/logo.png') no-repeat center center fixed;
       background-size: cover;
     }
 
@@ -168,7 +168,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
 
   <div class="back-button">
-    <a href="user-login.html">BACK</a>
+    <a href="user-login.php">BACK</a>
   </div>
 
   <div class="signup-container">
@@ -189,7 +189,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </form>
 
     <div class="login-link">
-      Already have an account? <a href="user-login.html">Login</a>
+      Already have an account? <a href="user-login.php">Login</a>
     </div>
   </div>
 

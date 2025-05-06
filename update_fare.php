@@ -1,50 +1,36 @@
 <?php
 $host = "localhost";
 $username = "root";
-$password = "";     
+$password = "";
 $dbname = "user_system";
 
 $conn = new mysqli($host, $username, $password, $dbname);
 if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
+    die("Connection failed: " . $conn->connect_error);
 }
 
-// var_dump($_POST);
-// exit;
-
+// Check if POST request
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $id = $_POST['id'];
-    $from = $_POST['from_location'];
-    $destination = $_POST['destination'];
-    $fare = $_POST['fare'];
-    $date = $_POST['fare_date'];
+    $id = $_POST['id'] ?? '';
+    $fare = $_POST['fare'] ?? '';
 
-    // Validate inputs if necessary
+    if (!empty($id) && !empty($fare)) {
+        // Only update the fare column
+        $stmt = $conn->prepare("UPDATE fare SET fare = ? WHERE id = ?");
+        $stmt->bind_param("di", $fare, $id);
+        
+        if ($stmt->execute()) {
+            // Redirect back to main dashboard page after successful update
+            header("Location: index.php"); // change filename if needed
+            exit;
+        } else {
+            echo "Failed to update fare.";
+        }
 
-    $sql = "UPDATE fare SET 
-                from_location = ?, 
-                destination = ?, 
-                fare = ?, 
-                fare_date = ? 
-            WHERE id = ?";
-
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssisi", $from, $destination, $fare, $date, $id);
-
-    if ($stmt->execute()) {
-        header("Location: index.php");
-        exit();
-        // echo "<script>
-        //     alert('Fare updated successfully.');
-        // </script>";
+        $stmt->close();
     } else {
-        echo "<script>
-            alert('Error updating fare: " . $conn->error . "');
-            window.history.back();
-        </script>";
+        echo "Missing fare or ID.";
     }
-
-    $stmt->close();
-    $conn->close();
 }
+$conn->close();
 ?>

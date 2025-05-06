@@ -1,14 +1,17 @@
-<?php
+<?php 
 session_start();
 
 // Database connection
-$conn = new mysqli("localhost", "root", "", "user_system");  // Update with your actual database credentials
+$conn = new mysqli("localhost", "root", "", "user_system");
 if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);
 }
 
-// Check if form is submitted
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+$email = '';
+$password = '';
+$error_message = '';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email']) && isset($_POST['password'])) {
   $email = $_POST['email'];
   $password = $_POST['password'];
 
@@ -20,15 +23,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   if ($result->num_rows === 1) {
     $user = $result->fetch_assoc();
-
-    // Verify password
     if (password_verify($password, $user['password'])) {
-      // Set session variables
       $_SESSION['user_id'] = $user['id'];
       $_SESSION['email'] = $user['email'];
-
-      // Redirect to the dashboard
-      header("Location: user-dashboard.php");
+      header("Location: user_dashboard.php");
       exit();
     } else {
       $error_message = "Incorrect password!";
@@ -41,6 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $conn->close();
 ?>
 
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,7 +49,7 @@ $conn->close();
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-image: url('logo.png');
+      background-image: url('images/logo.png');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -187,7 +187,7 @@ $conn->close();
 </head>
 <body>
   <div class="login-box">
-    <img src="helmet.jpg" alt="Helmet">
+    <img src="images/helmet.jpg" alt="Helmet">
     <a href="AdminLog.html" class="admin-btn">👤 Admin</a>
     <h1>LOGIN</h1>
 
@@ -213,7 +213,7 @@ $conn->close();
     <div class="account-links">
       Don't have an Account?<br>
       <a href="register_user.php" class="register-btn">🧑‍🎓 Click here!</a>
-      <a href="rider-login.html">👤 Rider</a>
+      <a href="rider-login.php">👤 Rider</a>
     </div>
   </div>
 

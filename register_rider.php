@@ -12,7 +12,7 @@ if ($conn->connect_error) {
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   // Collect form data
-  $name = $_POST['name'];
+  $rider_name = $_POST['rider_name'];
   $plate_number = $_POST['plate_number'];
   $contact = $_POST['contact'];
   $address = $_POST['address'];
@@ -20,13 +20,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $license_number = $_POST['license_number'];
 
   // Prepare and bind the SQL statement
-  $stmt = $conn->prepare("INSERT INTO riders (name, plate_number, contact, address, password, license_number) VALUES (?, ?, ?, ?, ?, ?)");
-  $stmt->bind_param("ssssss", $name, $plate_number, $contact, $address, $password, $license_number);
+  $stmt = $conn->prepare("INSERT INTO riders (rider_name, plate_number, contact, address, password, license_number) VALUES (?, ?, ?, ?, ?, ?)");
+  $stmt->bind_param("ssssss", $rider_name, $plate_number, $contact, $address, $password, $license_number);
 
   // Execute the query and check if it was successful
   if ($stmt->execute()) {
     // Redirect after successful registration
-    echo "<script>alert('Rider registered successfully!'); window.location.href = 'user-login.html';</script>";
+    echo "<script>alert('Rider registered successfully!'); window.location.href = 'rider-login.php';</script>";
   } else {
     // Show error message if the query failed
     echo "<script>alert('Error in registration. Please try again.');</script>";
@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: url('logo.png') no-repeat center center fixed;
+      background: url('images/logo.png') no-repeat center center fixed;
       background-size: cover;
     }
 
@@ -137,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
 
   <div class="back-button">
-    <a href="user-login.html">BACK</a>
+    <a href="user-login.php">BACK</a>
   </div>
 
   <div class="form-container">
@@ -145,7 +145,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <form action="register_rider.php" method="POST">
       <div>
         <label>Complete Name:</label>
-        <input type="text" name="name" required>
+        <input type="text" name="rider_name" required>
+
       </div>
       <div>
         <label>Plate Number:</label>

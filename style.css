@@ -127,15 +127,15 @@ table td {
     }
 
     #editPopup {
-        position: fixed;
-        top: -100%;
-        left: 0;
-        width: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        transition: top 0.5s ease;
-        z-index: 1000;
-      }
-  
+      position: fixed;
+      top: -100%;  /* <- this hides it, which is fine */
+      left: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      transition: top 0.5s ease;
+      z-index: 1000;  /* <- VERY HIGH! */
+    }
+    
       #editPopupBox {
         background: black;
         padding: 30px;
@@ -144,3 +144,12 @@ table td {
         margin: 20px auto;
         box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       }
+/* Change this in your CSS */
+.hidden {
+  display: none;
+}
+
+/* Add this to show the first section by default */
+#transaction {
+  display: block;
+}
